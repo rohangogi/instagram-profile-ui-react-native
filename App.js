@@ -4,6 +4,7 @@ import data from './Data';
 
 const App = () => {
   const [following, setFollowing] = useState(true);
+  const [follower, setFollower] = useState(0);
 
   const renderItem = ({item}) =>{
     return(
@@ -20,13 +21,13 @@ const App = () => {
           <View>
             { following ? (
               <View style={styles.profileTextStyle}>
-                <TouchableOpacity onPress={()=> setFollowing(false)}>
+                <TouchableOpacity onPress={()=> (setFollowing(false), setFollower(follower+1))}>
                   <Text style={{fontSize:18, alignSelf: 'center', color: 'white'}}>Follow</Text>
                 </TouchableOpacity>
               </View>
             ):(
               <View style={styles.profileTextStyle1}>
-                <TouchableOpacity onPress={()=>setFollowing(true)}>
+                <TouchableOpacity onPress={()=>(setFollowing(true),setFollower(follower-1))}>
                   <Text style={{fontSize:18, alignSelf: 'center', color: 'white'}}>Following</Text>
                 </TouchableOpacity>
               </View>
@@ -49,7 +50,7 @@ const App = () => {
             <Text style={{color: 'grey'}}>posts</Text>
           </View>
           <View style={styles.userInfoText}>
-            <Text>390m</Text>
+            <Text>{follower}</Text>
             <Text style={{color: 'grey'}}>followers</Text>
           </View>
           <View style={styles.userInfoText}>
@@ -59,9 +60,9 @@ const App = () => {
         </View>
         <View style={styles.postsStyle}> 
         {item.posts.map((list, key)=>( 
-        <TouchableOpacity style={styles.postImageStyle} onPress={()=> {handlePress(key)}}>
+        <TouchableOpacity style={styles.postImageStyle} key={key}>
           <Image
-            key={key}
+            //key={key.imgid}
             source={list.img}
             style={{width: '100%', height: "100%"}}
           /> 
@@ -71,11 +72,7 @@ const App = () => {
       </View>
     );
   };
-
-  const handlePress =(img) =>{
-    console.log(img);
-  }
-
+  
   return(
     <View style={styles.container}>
       <View style={styles.headerStyle}>
@@ -91,7 +88,7 @@ const App = () => {
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
